@@ -12,18 +12,20 @@ const btnHold = document.querySelector('.btn--hold');
 const player0El = document.querySelector('.player--0');
 const player1El = document.querySelector('.player--1');
 
-
 // Starting conditions
-score0El.textContent = '0';
-score1El.textContent = '0';
-currentScore0El.textContent = '0';
-currentScore1El.textContent = '0';
-diceImg.classList.add('hidden');
+let currentScore, activePlayer, scores, playing;
 
-let currentScore = 0;
-let activePlayer = 0;
-const scores = [0, 0];
-let playing = true;
+let init = () => {
+    score0El.textContent = '0';
+    score1El.textContent = '0';
+    currentScore0El.textContent = '0';
+    currentScore1El.textContent = '0';
+    diceImg.classList.add('hidden');
+    currentScore = 0;
+    activePlayer = 0;
+    scores = [0, 0];
+    playing = true;
+}
 
 const switchPlayer = () => {
     document.getElementById(`current--${activePlayer}`).textContent = '0';
@@ -32,6 +34,20 @@ const switchPlayer = () => {
     player0El.classList.toggle('player--active');
     player1El.classList.toggle('player--active');
 }
+
+let newGame = () => {
+    if (activePlayer === 0) {
+        document.querySelector(`.player--${activePlayer}`).classList.remove('player--winner');
+        document.querySelector(`.player--${activePlayer}`).classList.add('player--active');
+    } else {
+        document.querySelector(`.player--${activePlayer}`).classList.remove('player--winner');
+        document.querySelector(`.player--${activePlayer}`).classList.remove('player--active');
+        document.querySelector(`.player--0`).classList.add('player--active');
+    }
+    init();
+}
+
+init();
 
 // Rolling dice functionality
 btnRoll.addEventListener('click', () => {
@@ -61,7 +77,7 @@ btnHold.addEventListener('click', () => {
         scores[activePlayer] += currentScore;
         document.getElementById(`score--${activePlayer}`).textContent = scores[activePlayer];
         // Check if player's score is >= 100
-        if (scores[activePlayer] >= 10) {
+        if (scores[activePlayer] >= 100) {
             // Finish game
             document.querySelector(`.player--${activePlayer}`).classList.add('player--winner');
             document.querySelector(`.player--${activePlayer}`).classList.remove('player--active');
@@ -72,4 +88,8 @@ btnHold.addEventListener('click', () => {
             switchPlayer();
         }
     }
+})
+
+btnNewGame.addEventListener('click', () => {
+    newGame();
 })
